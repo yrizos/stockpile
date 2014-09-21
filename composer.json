@@ -1,5 +1,19 @@
 {
 
+    "name": "yrizos/stockpile",
+    "type": "library",
+    "keywords": ["cache", "memcache", "redis"],
+    "homepage": "https://github.com/yrizos/stockpile",
+    "license": "MIT",
+
+    "authors": [
+        {
+            "name": "Yannis Rizos",
+            "email": "yrizos@gmail.com",
+            "homepage": "https://twitter.com/yrizos"
+        }
+    ],
+
     "autoload": {
         "psr-4": {
             "Stockpile\\": "src/"
@@ -9,11 +23,11 @@
     "require": {
         "php": ">=5.4.0",
 
-        "symfony/options-resolver": "2.6.*@dev"
+        "symfony/options-resolver": "2.6.*@dev",
+        "predis/predis": "1.1.*@dev"
     },
 
     "require-dev": {
-        "predis/predis": "1.1.*@dev",
         "phpunit/phpunit": "3.7.*@dev"
     }
 }
