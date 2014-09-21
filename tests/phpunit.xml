@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit bootstrap="./bootstrap.php">
+    <testsuites>
+        <testsuite name="CommonFilesystemAndMemory">
+            <directory suffix="Test.php">./Tests/Common</directory>
+            <file>./Tests/Backend/FilesystemTest.php</file>
+            <file>./Tests/Backend/MemoryTest.php</file>
+        </testsuite>
+        <testsuite name="RedisOnly">
+            <directory suffix="Test.php">./Tests/Common</directory>
+            <file>./Tests/Backend/RedisTest.php</file>
+        </testsuite>
+        <testsuite name="MemcacheOnly">
+            <directory suffix="Test.php">./Tests/Common</directory>
+            <file>./Tests/Backend/MemcacheTest.php</file>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./../src</directory>
+        </whitelist>
+    </filter>
+</phpunit>

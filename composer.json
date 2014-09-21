@@ -1,0 +1,19 @@
+{
+
+    "autoload": {
+        "psr-4": {
+            "Stockpile\\": "src/"
+        }
+    },
+
+    "require": {
+        "php": ">=5.4.0",
+
+        "symfony/options-resolver": "2.6.*@dev"
+    },
+
+    "require-dev": {
+        "predis/predis": "1.1.*@dev",
+        "phpunit/phpunit": "3.7.*@dev"
+    }
+}
