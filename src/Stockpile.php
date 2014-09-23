@@ -38,9 +38,19 @@ class Stockpile implements CacheInterface
         return $this->backend->set($key, $data, $ttl);
     }
 
+    public function store($key, $data, $ttl = 0)
+    {
+        return $this->set($key, $data, $ttl);
+    }
+
     public function get($key)
     {
         return $this->backend->get($key);
+    }
+
+    public function fetch($key)
+    {
+        return $this->get($key);
     }
 
     public function exists($key)

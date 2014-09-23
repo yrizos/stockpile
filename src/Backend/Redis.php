@@ -9,6 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class Redis extends AbstractBackend implements BackendInterface
 {
+
     private $redis;
 
     protected function configureOptions(OptionsResolverInterface $resolver)
@@ -25,22 +26,12 @@ class Redis extends AbstractBackend implements BackendInterface
     public function initialize()
     {
         $this->redis = new Client([
-            "scheme"   => $this->getOption("scheme"),
-            "host"     => $this->getOption("host"),
-            "port"     => $this->getOption("port"),
-            "database" => "cache-" . $this->getOption("namespace"),
-            "prefix"   => $this->getOption("namespace") . "::"
+            "scheme" => $this->getOption("scheme"),
+            "host"   => $this->getOption("host"),
+            "port"   => $this->getOption("port"),
         ]);
 
         return $this;
-    }
-
-    public function getKey($key)
-    {
-        $key = self::normalizeKey($key);
-        if ($key === "") throw new \InvalidArgumentException("Cache key can't be empty");
-
-        return $key;
     }
 
     public function set($key, $data, $ttl = 0)
@@ -84,7 +75,7 @@ class Redis extends AbstractBackend implements BackendInterface
 
     public function flush()
     {
-        $result = (string) $this->redis->flushdb();
+        $result = (string)$this->redis->flushdb();
 
         return $result === "OK";
     }

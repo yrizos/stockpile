@@ -8,6 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 abstract class AbstractBackend
 {
+
     private $options = [];
 
     public function __construct(array $options = [])
@@ -21,7 +22,7 @@ abstract class AbstractBackend
 
     protected function configureOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(["namespace" => ""]);
+        $resolver->setDefaults(["namespace" => "stockpile"]);
         $resolver->setRequired([]);
 
         $resolver->setNormalizers([
@@ -44,7 +45,8 @@ abstract class AbstractBackend
                 : null;
     }
 
-    protected function setOption($option, $value) {
+    protected function setOption($option, $value)
+    {
         $this->options[$option] = $value;
 
         return $this;
@@ -52,7 +54,7 @@ abstract class AbstractBackend
 
     public function getExpires($ttl)
     {
-        $ttl = (int) $ttl;
+        $ttl = (int)$ttl;
         if ($ttl < 0) $ttl = 0;
 
         return $ttl;
@@ -64,7 +66,7 @@ abstract class AbstractBackend
         $key = self::normalizeKey($key);
 
         if ($key === "") throw new \InvalidArgumentException("Cache key can't be empty");
-        if (!empty($ns)) $key = $ns . "::" . $key;
+        if (!empty($ns)) $key = $ns . ":" . $key;
 
         return $key;
     }
@@ -85,4 +87,14 @@ abstract class AbstractBackend
     abstract function delete($key);
 
     abstract function flush();
+
+    public function store($key, $data, $ttl = 0)
+    {
+        return $this->set($key, $data, $ttl);
+    }
+
+    public function fetch($key)
+    {
+        return $this->get($key);
+    }
 } 

@@ -16,7 +16,7 @@ class RedisTest extends BackendCommon
     public function testGetKey()
     {
         $key       = "my key";
-        $expected  = "my-key";
+        $expected = "stockpile-test:my-key";
 
         $this->assertEquals($expected, $this->stockpile->getKey($key));
     }

@@ -7,7 +7,11 @@ interface CacheInterface
 
     public function set($key, $data, $ttl = 0);
 
+    public function store($key, $data, $ttl = 0);
+
     public function get($key);
+
+    public function fetch($key);
 
     public function exists($key);
 

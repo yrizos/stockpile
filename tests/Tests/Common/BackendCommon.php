@@ -5,7 +5,7 @@ namespace Stockpile\Tests\Common;
 class BackendCommon extends \PHPUnit_Framework_TestCase
 {
     protected $stockpile;
-    protected $namespace = "test namespace";
+    protected $namespace = "stockpile-test";
     protected $data =
         [
             "key 1" => ["some", "data"],
@@ -16,7 +16,7 @@ class BackendCommon extends \PHPUnit_Framework_TestCase
     public function testGetKey()
     {
         $key      = "my key";
-        $expected = "test-namespace::my-key";
+        $expected = "stockpile-test:my-key";
 
         $this->assertEquals($expected, $this->stockpile->getKey($key));
     }
@@ -24,11 +24,11 @@ class BackendCommon extends \PHPUnit_Framework_TestCase
     public function testSetGet()
     {
         foreach ($this->data as $key => $value) {
-            $result = $this->stockpile->set($key, $value, 5);
+            $result = $this->stockpile->store($key, $value, 5);
 
             $this->assertTrue($result);
             $this->assertTrue($this->stockpile->exists($key));
-            $this->assertEquals($value, $this->stockpile->get($key));
+            $this->assertEquals($value, $this->stockpile->fetch($key));
 
             $this->stockpile->delete($key);
             $this->assertFalse($this->stockpile->exists($key));
