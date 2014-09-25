@@ -28,7 +28,7 @@ class Memcache extends AbstractBackend implements BackendInterface
         $this->memcache->addserver($this->getOption("host"), $this->getOption("port"));
     }
 
-    public function set($key, $data, $ttl = 0)
+    public function set($key, $data, $ttl = null)
     {
         return $this->memcache->set($this->getKey($key), $data, 0, $this->getExpires($ttl));
     }

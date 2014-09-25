@@ -4,10 +4,9 @@ namespace Stockpile;
 
 interface CacheInterface
 {
+    public function set($key, $data, $ttl = null);
 
-    public function set($key, $data, $ttl = 0);
-
-    public function store($key, $data, $ttl = 0);
+    public function store($key, $data, $ttl = null);
 
     public function get($key);
 
@@ -19,8 +18,7 @@ interface CacheInterface
 
     public function flush();
 
-    public function getExpires($ttl);
+    public function getExpires($ttl = null);
 
     public function getKey($key);
-
 } 

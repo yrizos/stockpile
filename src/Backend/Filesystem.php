@@ -54,7 +54,7 @@ class Filesystem extends AbstractBackend implements BackendInterface
         return $this;
     }
 
-    public function set($key, $data, $ttl = 0)
+    public function set($key, $data, $ttl = null)
     {
         $key = $this->getKey($key);
         $dir = dirname($key);
@@ -105,9 +105,9 @@ class Filesystem extends AbstractBackend implements BackendInterface
         return !$this->exists($key);
     }
 
-    public function getExpires($ttl)
+    public function getExpires($ttl = null)
     {
-        return microtime(true) + parent::getExpires($ttl);
+        return time() + parent::getExpires($ttl);
     }
 
     public function flush()
