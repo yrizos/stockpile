@@ -30,6 +30,4 @@
         "predis/predis": "Redis client"
     }
 
-
-
 }
