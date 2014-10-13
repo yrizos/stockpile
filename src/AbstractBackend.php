@@ -10,6 +10,7 @@ abstract class AbstractBackend
 {
 
     private $options = [];
+    private $defaultTtl = 0;
 
     public function __construct(array $options = [])
     {
@@ -22,12 +23,15 @@ abstract class AbstractBackend
 
     protected function configureOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(["namespace" => "stockpile"]);
+        $resolver->setDefaults(["namespace" => "stockpile", "default_ttl" => 0]);
         $resolver->setRequired([]);
 
         $resolver->setNormalizers([
             "namespace" => function (Options $options, $value) {
                     return self::normalizeKey($value);
+                },
+            "default_ttl" => function (Options $options, $value) {
+                    return (int) $value;
                 }
         ]);
     }
@@ -52,10 +56,10 @@ abstract class AbstractBackend
         return $this;
     }
 
-    public function getExpires($ttl)
+    public function getExpires($ttl = null)
     {
-        $ttl = (int)$ttl;
-        if ($ttl < 0) $ttl = 0;
+        if (is_null($ttl)) $ttl = $this->getOption("default_ttl");
+        $ttl = (int) $ttl;
 
         return $ttl;
     }
@@ -88,7 +92,7 @@ abstract class AbstractBackend
 
     abstract function flush();
 
-    public function store($key, $data, $ttl = 0)
+    public function store($key, $data, $ttl = null)
     {
         return $this->set($key, $data, $ttl);
     }

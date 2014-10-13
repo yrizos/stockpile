@@ -10,7 +10,7 @@ class Memory extends AbstractBackend implements BackendInterface
 
     private $storage = [];
 
-    public function getExpires($ttl)
+    public function getExpires($ttl = null)
     {
         return time() + parent::getExpires($ttl);
     }
@@ -19,7 +19,7 @@ class Memory extends AbstractBackend implements BackendInterface
     {
     }
 
-    public function set($key, $data, $ttl = 0)
+    public function set($key, $data, $ttl = null)
     {
         $this->storage[$this->getKey($key)] = [$data, $this->getExpires($ttl)];
 

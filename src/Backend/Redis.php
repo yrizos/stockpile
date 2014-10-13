@@ -34,7 +34,7 @@ class Redis extends AbstractBackend implements BackendInterface
         return $this;
     }
 
-    public function set($key, $data, $ttl = 0)
+    public function set($key, $data, $ttl = null)
     {
         $key  = $this->getKey($key);
         $data = @serialize($data);

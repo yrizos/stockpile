@@ -33,12 +33,12 @@ class Stockpile implements CacheInterface
         return new Stockpile(new $backend($options));
     }
 
-    public function set($key, $data, $ttl = 0)
+    public function set($key, $data, $ttl = null)
     {
         return $this->backend->set($key, $data, $ttl);
     }
 
-    public function store($key, $data, $ttl = 0)
+    public function store($key, $data, $ttl = null)
     {
         return $this->set($key, $data, $ttl);
     }
@@ -68,7 +68,7 @@ class Stockpile implements CacheInterface
         return $this->backend->flush();
     }
 
-    public function getExpires($ttl)
+    public function getExpires($ttl = null)
     {
         return $this->backend->expires($ttl);
     }
