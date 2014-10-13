@@ -23,11 +23,13 @@
     "require": {
         "php": ">=5.4.0",
 
-        "symfony/options-resolver": "2.6.*@dev",
-        "predis/predis": "1.1.*@dev"
+        "symfony/options-resolver": "2.6.*@dev"
     },
 
-    "require-dev": {
-        "phpunit/phpunit": "3.7.*@dev"
+    "suggest": {
+        "predis/predis": "Redis client"
     }
+
+
+
 }
