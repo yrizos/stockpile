@@ -118,7 +118,7 @@ class Filesystem extends AbstractBackend implements BackendInterface
     public static function normalizePath($path)
     {
         $path = self::normalizeKey($path);
-        $path = trim(str_replace(["\\", "/"], DIRECTORY_SEPARATOR, $path), DIRECTORY_SEPARATOR);
+        $path = rtrim(str_replace(["\\", "/"], DIRECTORY_SEPARATOR, $path), DIRECTORY_SEPARATOR);
 
         return $path;
     }
