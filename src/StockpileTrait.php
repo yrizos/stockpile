@@ -6,6 +6,7 @@ trait StockpileTrait
 {
 
     private $cache;
+    private $flag = true;
 
     public function setCache(CacheInterface $cache)
     {
@@ -16,7 +17,7 @@ trait StockpileTrait
 
     public function getCache()
     {
-        return $this->cache;
+        return $this->flag ? $this->cache : false;
     }
 
     public function cacheSet($key, $data, $ttl = null)
@@ -35,4 +36,17 @@ trait StockpileTrait
                 : null;
     }
 
+    public function cacheOn()
+    {
+        $this->flag = true;
+
+        return $this;
+    }
+
+    public function cacheOff()
+    {
+        $this->flag = false;
+
+        return $this;
+    }
 } 
