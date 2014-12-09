@@ -2,9 +2,10 @@
 
     "name": "yrizos/stockpile",
     "type": "library",
-    "keywords": ["cache", "memcache", "redis"],
+    "keywords": ["cache"],
     "homepage": "https://github.com/yrizos/stockpile",
     "license": "MIT",
+
 
     "authors": [
         {
@@ -14,15 +15,23 @@
         }
     ],
 
-    "autoload": {
-        "psr-4": {
-            "Stockpile\\": "src/"
-        }
-    },
-
     "require": {
         "php": ">=5.4.0",
 
         "symfony/options-resolver": "2.6.1"
+    },
+
+    "autoload": {
+        "psr-4": {
+            "Stockpile\\": "src/"
+        },
+
+        "psr-0": {
+            "Psr\\Cache": "vendor/psr/cache"
+        }
+    },
+
+    "provide": {
+        "psr/cache-implementation": "~1.0"
     }
 }

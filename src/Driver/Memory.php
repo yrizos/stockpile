@@ -23,29 +23,36 @@ class Memory extends Driver
 
     public function exists($key)
     {
-
-
-
-        return isset($this->items[$key]);
+        return isset($this->items[self::normalizeKey($key)]);
     }
 
     public function get($key)
     {
+        if (!$this->exists($key)) return null;
+
+        $key   = self::normalizeKey($key);
+        $value = $this->items[self::normalizeKey($key)];
+
         return
-            $this->exists($key)
-                ? $this->items[$key]
-                : null;
+            $this->current($value[1])
+                ? $value[0]
+                : false;
     }
 
-    public function set($key, $value)
+    public function set($key, $value, $ttl = null)
     {
-        $this->items[$key] = $value;
+        $key = self::normalizeKey($key);
+        $ttl = self::normalizeTtl($ttl);
+
+        $this->items[$key] = [$value, $ttl];
 
         return $this;
     }
 
     public function delete($key)
     {
+        $key = self::normalizeKey($key);
+
         unset($this->items[$key]);
 
         return !$this->exists($key);

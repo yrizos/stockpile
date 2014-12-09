@@ -1,5 +1,6 @@
 /.idea
 /build
-/vendor
+/vendor/*
+!/vendor/psr
 composer.lock
 codeclimate.json

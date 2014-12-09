@@ -3,6 +3,7 @@
 namespace Stockpile\Driver;
 
 use Stockpile\Driver;
+use Stockpile\Exception\CacheException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -65,27 +66,42 @@ class Filesystem extends Driver
 
     public function get($key)
     {
-        if (!$this->exists($key)) return null;
+        if (!$this->exists($key)) return false;
 
-        try {
-            $value = Driver::unserialize(file_get_contents($this->getPath($key)));
-        } catch (\Exception $e) {
-            return null;
-        }
+        set_error_handler(function () {
+            throw new CacheException('Unserialization failed.');
+        });
 
-        return $value;
+        $value = file_get_contents($this->getPath($key));
+        $value = unserialize($value);
+
+        restore_error_handler();
+
+        if (
+            !is_array($value)
+            || !isset($value[0])
+            || !isset($value[1])
+            || !$this->current($value[1])
+        ) return false;
+
+        return $value[0];
     }
 
-    public function set($key, $value)
+    public function set($key, $value, $ttl = null)
     {
+
+        $ttl   = self::normalizeTtl($ttl);
+        $value = @serialize([$value, $ttl]);
+
+        if (empty($value)) throw new CacheException('Serialization failed.');
+
         $path    = $this->getPath($key);
         $dirname = dirname($path);
-        $value   = Driver::serialize($value);
 
         if (!is_dir($dirname)) @mkdir($dirname, 0777, true);
-        if (!is_dir($dirname)) throw new \ErrorException("Couldn't create cache directory.");
+        if (!is_dir($dirname)) throw new CacheException("Couldn't create cache directory.");
 
-        if (file_put_contents($path, $value) === false) throw new \ErrorException("Couldn't save cache file.");
+        if (file_put_contents($path, $value) === false) throw new CacheException("Couldn't save cache file.");
 
         return $this;
     }
@@ -103,24 +119,4 @@ class Filesystem extends Driver
 
         return $this->getOption('directory') . DIRECTORY_SEPARATOR . $key . '.' . $this->getOption('extension');
     }
-
-    public static function normalizeKey($key)
-    {
-        $key = trim(strval($key));
-        $key = str_replace(' ', '_', $key);
-        $key = str_replace(['\\', '/'], DIRECTORY_SEPARATOR, $key);
-        $key = trim($key, DIRECTORY_SEPARATOR);
-        $key = explode(DIRECTORY_SEPARATOR, $key);
-
-        $key = array_map(function ($value) {
-            if (filter_var($value, FILTER_SANITIZE_STRING) === $value) {
-                return $value;
-            }
-
-            return md5($value);
-        }, $key);
-
-        return implode(DIRECTORY_SEPARATOR, $key);
-    }
-
 } 

@@ -66,4 +66,17 @@ abstract class DriverCommon extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function testExpiration()
+    {
+        $this->driver->set('past', '', -1);
+
+        $this->assertTrue($this->driver->exists('past'));
+        $this->assertFalse($this->driver->get('past'));
+    }
+
+    public function tearDown()
+    {
+        $this->driver->flush();
+    }
+
 } 
