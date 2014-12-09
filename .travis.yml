@@ -4,6 +4,7 @@ php:
   - 5.4
 
 install:
+  - composer install
   - composer require codeclimate/php-test-reporter:dev-master
 
 before_script: mkdir -p build/logs
