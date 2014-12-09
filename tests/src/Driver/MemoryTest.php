@@ -3,14 +3,16 @@ namespace StockpileTest\Driver;
 
 use Stockpile\Driver;
 
-class MemoryTest extends \PHPUnit_Framework_TestCase
+class MemoryTest extends DriverCommon
 {
 
-    public function testConnect()
+    public function getDriver()
     {
-        $driver = Driver::factory('memory', []);
-
-        var_dump($driver);
+        return Driver::factory('memory');
     }
 
+    public function testGetName()
+    {
+        $this->assertEquals('memory', $this->driver->getName());
+    }
 }

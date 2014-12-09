@@ -1,23 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<phpunit bootstrap="./bootstrap.php">
+<?xml version="1.0" encoding="utf-8"?>
+<phpunit bootstrap="./autoload.php">
     <testsuites>
-        <testsuite name="CommonFilesystemAndMemory">
-            <directory suffix="Test.php">./Tests/Common</directory>
-            <file>./Tests/Backend/FilesystemTest.php</file>
-            <file>./Tests/Backend/MemoryTest.php</file>
-        </testsuite>
-        <testsuite name="RedisOnly">
-            <directory suffix="Test.php">./Tests/Common</directory>
-            <file>./Tests/Backend/RedisTest.php</file>
-        </testsuite>
-        <testsuite name="MemcacheOnly">
-            <directory suffix="Test.php">./Tests/Common</directory>
-            <file>./Tests/Backend/MemcacheTest.php</file>
+        <testsuite name="Stockpile">
+            <directory suffix="Test.php">./src</directory>
         </testsuite>
     </testsuites>
+
     <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
+        <whitelist>
             <directory suffix=".php">./../src</directory>
         </whitelist>
     </filter>

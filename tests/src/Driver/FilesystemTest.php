@@ -2,35 +2,18 @@
 namespace StockpileTest\Driver;
 
 use Stockpile\Driver;
-use Stockpile\DriverInterface;
 
-class MemoryTest extends DriverCommon
+class FilesystemTest extends DriverCommon
 {
 
-    /**
-     * @var DriverInterface
-     */
-    protected $driver;
-
-    public function setUp()
+    public function getDriver()
     {
-        parent::setUp();
-
-        $this->driver = Driver::factory('memory', []);
+        return Driver::factory('filesystem', ['directory' => __DIR__ . '/../../.cache']);
     }
 
     public function testGetName()
     {
-        $this->assertEquals('memory', $this->driver->getName());
-    }
-
-    public function testSetGet()
-    {
-        foreach ($this->data as $key => $value) {
-            $this->driver->set($key, $value);
-
-            $this->assertSame($value, $this->driver->get($key));
-        }
+        $this->assertEquals('filesystem', $this->driver->getName());
     }
 
 }
