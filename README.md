@@ -1,0 +1,6 @@
+[![Build Status](https://img.shields.io/travis/yrizos/stockpile.svg)](https://travis-ci.org/yrizos/stockpile)
+[![Codacy](https://img.shields.io/codacy/62998ff3684e4258a979a9161170c618.svg)](https://www.codacy.com/public/yrizos/stockpile)
+[![Code Climate](http://img.shields.io/codeclimate/github/yrizos/stockpile.svg)](https://codeclimate.com/github/yrizos/stockpile)
+[![Coverage](http://img.shields.io/codeclimate/coverage/github/yrizos/stockpile.svg)](https://codeclimate.com/github/yrizos/stockpile)
+[![Latest Release](http://img.shields.io/packagist/v/yrizos/stockpile.svg)](https://packagist.org/packages/yrizos/stockpile)
+[![License](http://img.shields.io/packagist/l/yrizos/stockpile.svg)](https://packagist.org/packages/yrizos/stockpile)
