@@ -9,8 +9,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class Filesystem extends Driver
 {
 
-    private $paths = [];
-
     protected function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(['extension' => 'stockpile', 'directory' => './stockpile']);
@@ -101,12 +99,9 @@ class Filesystem extends Driver
 
     protected function getPath($key)
     {
-        if (!isset($this->paths[$key])) {
-            $key               = self::normalizeKey($key);
-            $this->paths[$key] = $this->getOption('directory') . DIRECTORY_SEPARATOR . $key . '.' . $this->getOption('extension');
-        }
+        $key = self::normalizeKey($key);
 
-        return $this->paths[$key];
+        return $this->getOption('directory') . DIRECTORY_SEPARATOR . $key . '.' . $this->getOption('extension');
     }
 
     public static function normalizeKey($key)
