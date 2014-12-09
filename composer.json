@@ -27,7 +27,7 @@
         },
 
         "psr-0": {
-            "Psr\\Cache": "vendor/psr/cache"
+            "Psr\\Cache\\": "vendor/psr/cache"
         }
     },
 
