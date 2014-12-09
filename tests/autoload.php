@@ -2,4 +2,4 @@
 
 $autoloader = require "./../vendor/autoload.php";
 
-$autoloader->addPsr4("Stockpile\\Tests\\", "./Tests/");
+$autoloader->addPsr4("StockpileTest\\", "./src/");
