@@ -47,16 +47,16 @@ class Pool implements PoolInterface
 
     public function getItems(array $keys = array())
     {
-        $result = [];
+        $items = [];
 
-        foreach ($keys as $key) $result[$key] = $this->getItem($key);
+        foreach ($keys as $key) $items[$key] = $this->getItem($key);
 
-        return $result;
+        return $items;
     }
 
     public function clear()
     {
-        return $this->getDriver()->flush();
+        return $this->getDriver()->clear();
     }
 
     public function deleteItems(array $keys)
@@ -82,7 +82,6 @@ class Pool implements PoolInterface
 
     public function commit()
     {
-        $result = true;
         foreach ($this->defered as $key => $item) {
             $this->save($item);
 
@@ -97,5 +96,10 @@ class Pool implements PoolInterface
         if (!($driver instanceof DriverInterface)) $driver = Driver::factory($driver, $options);
 
         return new Pool($driver);
+    }
+
+    public function __destruct()
+    {
+        $this->commit();
     }
 }

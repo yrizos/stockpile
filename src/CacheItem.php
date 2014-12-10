@@ -76,9 +76,14 @@ class CacheItem implements CacheItemInterface
 
     }
 
+    /**
+     * @todo
+     *
+     * @return bool
+     */
     public function isRegenerating()
     {
-
+        return false;
     }
 
     public function setExpiration($ttl = null)

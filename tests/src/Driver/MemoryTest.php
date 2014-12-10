@@ -1,4 +1,5 @@
 <?php
+
 namespace StockpileTest\Driver;
 
 use Stockpile\Driver;
@@ -15,4 +16,9 @@ class MemoryTest extends DriverCommon
     {
         $this->assertEquals('memory', $this->driver->getName());
     }
-}
+
+    public function testGetOptions()
+    {
+        $this->assertEquals([], $this->driver->getOptions());
+    }
+} 

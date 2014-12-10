@@ -3,11 +3,11 @@
 namespace Stockpile;
 
 use Stockpile\Exception\CacheException;
+use Stockpile\Exception\InvalidArgumentException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class Driver implements DriverInterface
 {
-
     const DEFAULT_EXPIRATION = 'now +1 month';
 
     private $options = [];
@@ -22,18 +22,9 @@ abstract class Driver implements DriverInterface
         $this->connect();
     }
 
-    abstract protected function connect();
-
-    abstract public function flush();
-
-    abstract public function exists($key);
-
-    abstract public function get($key);
-
-    abstract public function set($key, $value, $ttl = null);
-
-    abstract public function delete($key);
-
+    /**
+     * @return string
+     */
     public function getName()
     {
         $class = get_class($this);
@@ -43,11 +34,18 @@ abstract class Driver implements DriverInterface
         return strtolower($class);
     }
 
+    /**
+     * @return array
+     */
     final public function getOptions()
     {
         return $this->options;
     }
 
+    /**
+     * @param $name
+     * @return mixed|null
+     */
     final public function getOption($name)
     {
         return
@@ -61,35 +59,43 @@ abstract class Driver implements DriverInterface
 
     }
 
-    protected function current($expiration)
+    abstract protected function connect();
+
+    abstract public function exists($key);
+
+    abstract public function set($key, $value, $ttl = null);
+
+    abstract public function get($key);
+
+    abstract public function delete($key);
+
+    abstract public function clear();
+
+    public static function isCurrent($time)
     {
-        if (is_int($expiration)) $expiration = new \DateTime('@' . $expiration);
-        if (!($expiration instanceof \DateTime)) return false;
+        if (is_int($time)) $time = new \DateTime('@' . $time);
 
-        $now = new \DateTime();
-
-        return $expiration > $now;
+        return
+            ($time instanceof \DateTime)
+                ? $time > new \DateTime()
+                : false;
     }
 
-    public function normalizeKey($key)
+    /**
+     * @param $key
+     * @return mixed
+     * @throws Exception\InvalidArgumentException
+     */
+    public static function normalizeKey($key)
     {
-        if (!is_string($key)) throw new \InvalidArgumentException();
+        if (!is_string($key)) throw new InvalidArgumentException('Cache key must be a string.');
 
         $key = trim($key);
-        $key = str_replace(' ', '_', $key);
-        $key = str_replace(['\\', '/'], DIRECTORY_SEPARATOR, $key);
-        $key = trim($key, DIRECTORY_SEPARATOR);
-        $key = explode(DIRECTORY_SEPARATOR, $key);
+        $key = preg_replace('/\s+/', ' ', $key);
 
-        $key = array_map(function ($value) {
-            if (filter_var($value, FILTER_SANITIZE_STRING) === $value) {
-                return $value;
-            }
+        if (empty($key)) throw new InvalidArgumentException('Cache key can\'t be empty.');
 
-            return md5($value);
-        }, $key);
-
-        return implode(DIRECTORY_SEPARATOR, $key);
+        return str_replace(' ', '_', $key);
     }
 
     public static function normalizeTtl($ttl = null)
@@ -115,6 +121,4 @@ abstract class Driver implements DriverInterface
 
         return new $driver($options);
     }
-
-
 } 

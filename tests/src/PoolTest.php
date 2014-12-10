@@ -20,14 +20,12 @@ class PoolTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         for ($i = 1; $i < 5; $i++) $this->data['key ' . $i] = 'value ' . $i;
-
         $this->pool = Pool::factory('filesystem', ['directory' => __DIR__ . '/../.cache']);
     }
 
     public function testNullDriver()
     {
         $pool = new Pool();
-
         $this->assertEquals('memory', $pool->getDriver()->getName());
     }
 
@@ -39,6 +37,7 @@ class PoolTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('filesystem', $pool->getDriver()->getName());
 
         $pool = Pool::factory('filesystem', ['directory' => __DIR__ . '/../.cache']);
+
         $this->assertEquals('filesystem', $pool->getDriver()->getName());
     }
 
@@ -48,6 +47,7 @@ class PoolTest extends \PHPUnit_Framework_TestCase
 
         foreach ($this->data as $key => $value) {
             $item = new CacheItem($key, $value);
+
             $this->pool->save($item);
 
             $item = $this->pool->getItem($key);
@@ -59,26 +59,58 @@ class PoolTest extends \PHPUnit_Framework_TestCase
 
     public function testDeferred()
     {
-
         $this->pool->clear();
 
         foreach ($this->data as $key => $value) {
             $item = new CacheItem($key, $value);
-            $this->pool->save($item);
-        }
 
-        $items = $this->pool->getItems(array_keys($this->data));
-        foreach ($item as $item) $this->assertTrue($item->isMiss());
+            $this->pool->saveDeferred($item);
+
+            $item = $this->pool->getItem($key);
+
+            $this->assertFalse($item->isHit());
+        }
 
         $this->pool->commit();
 
-        $items = $this->pool->getItems(array_keys($this->data));
-        foreach ($item as $item) $this->assertTrue($item->isHit());
+        foreach ($this->data as $key => $value) {
+            $item = $this->pool->getItem($key);
+
+            $this->assertTrue($item->isHit());
+            $this->assertEquals($value, $item->get());
+        }
+    }
+
+    public function testDestruct()
+    {
+        $pool = Pool::factory('filesystem', ['directory' => __DIR__ . '/../.cache']);
+
+        foreach ($this->data as $key => $value) {
+            $item = new CacheItem($key, $value);
+
+            $pool->saveDeferred($item);
+
+            $item = $pool->getItem($key);
+
+            $this->assertFalse($item->isHit());
+        }
+
+        unset($pool);
+
+        $pool = Pool::factory('filesystem', ['directory' => __DIR__ . '/../.cache']);
+
+        foreach ($this->data as $key => $value) {
+            $item = $pool->getItem($key);
+
+            $this->assertTrue($item->isHit());
+            $this->assertEquals($value, $item->get());
+        }
     }
 
     public function tearDown()
     {
         $this->pool->clear();
     }
+
 
 } 

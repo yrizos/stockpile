@@ -6,7 +6,6 @@ use Stockpile\DriverInterface;
 
 abstract class DriverCommon extends \PHPUnit_Framework_TestCase
 {
-
     protected $data = [];
 
     /**
@@ -14,21 +13,14 @@ abstract class DriverCommon extends \PHPUnit_Framework_TestCase
      */
     protected $driver;
 
+    abstract function getDriver();
+
     public function setUp()
     {
-        $this->data = [
-            'namespace 1\key 1' => 1,
-            'namespace 1\key 2' => 'Hello world',
-            'namespace 2\key 1' => new \DateTime(),
-        ];
+        for ($i = 0; $i < 5; $i++) $this->data['key ' . $i] = 'value ' . $i;
 
         $this->driver = $this->getDriver();
     }
-
-    /**
-     * @return DriverInterface
-     */
-    abstract function getDriver();
 
     public function testSetGet()
     {
@@ -46,12 +38,14 @@ abstract class DriverCommon extends \PHPUnit_Framework_TestCase
             $this->driver->set($key, $value);
 
             $this->assertTrue($this->driver->exists($key));
+
             $this->driver->delete($key);
+
             $this->assertFalse($this->driver->exists($key));
         }
     }
 
-    public function testFlush()
+    public function testClear()
     {
         foreach ($this->data as $key => $value) {
             $this->driver->set($key, $value);
@@ -59,24 +53,23 @@ abstract class DriverCommon extends \PHPUnit_Framework_TestCase
             $this->assertTrue($this->driver->exists($key));
         }
 
-        $this->driver->flush();
+        $this->driver->clear();
 
         foreach ($this->data as $key => $value) {
             $this->assertFalse($this->driver->exists($key));
         }
     }
 
-    public function testExpiration()
+    public function testExpire()
     {
-        $this->driver->set('past', '', -1);
+        $this->driver->set('expired', '', -1);
 
-        $this->assertTrue($this->driver->exists('past'));
-        $this->assertFalse($this->driver->get('past'));
+        $this->assertTrue($this->driver->exists('expired'));
+        $this->assertFalse($this->driver->get('expired'));
     }
 
-    public function tearDown()
-    {
-        $this->driver->flush();
-    }
-
+//    public function tearDown()
+//    {
+//        $this->driver->clear();
+//    }
 } 
