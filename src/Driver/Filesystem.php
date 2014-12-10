@@ -12,7 +12,7 @@ class Filesystem extends Driver
 
     protected function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(['extension' => 'stockpile', 'directory' => './stockpile']);
+        $resolver->setDefaults(['extension' => 'stockpile', 'directory' => sys_get_temp_dir() . '/stockpile']);
         $resolver->setRequired(['directory']);
 
         $resolver->setNormalizers([

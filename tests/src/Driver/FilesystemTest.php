@@ -8,7 +8,7 @@ class FilesystemTest extends DriverCommon
 {
     public function getDriver()
     {
-        return Driver::factory('filesystem', ['directory' => __DIR__ . '/../.cache']);
+        return Driver::factory('filesystem');
     }
 
     public function testGetName()
