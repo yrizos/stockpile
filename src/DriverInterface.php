@@ -2,7 +2,7 @@
 
 namespace Stockpile;
 
-interface DriverInterface
+interface DriverInterface extends CacheInterface
 {
     public function __construct(array $options = []);
 
@@ -12,13 +12,5 @@ interface DriverInterface
 
     public function getOption($name);
 
-    public function exists($key);
 
-    public function set($key, $value, $ttl = null);
-
-    public function get($key);
-
-    public function delete($key);
-
-    public function clear();
 }
