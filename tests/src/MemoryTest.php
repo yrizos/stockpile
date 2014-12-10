@@ -1,6 +1,6 @@
 <?php
 
-namespace StockpileTest\Driver;
+namespace StockpileTest;
 
 use Stockpile\Driver;
 
