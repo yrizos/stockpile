@@ -8,11 +8,6 @@ class Memory extends Driver
 {
     private $storage = [];
 
-    protected function connect()
-    {
-
-    }
-
     public function exists($key)
     {
         return isset($this->storage[self::normalizeKey($key)]);

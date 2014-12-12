@@ -4,7 +4,6 @@ php:
   - 5.4
 
 install:
-  - composer self-update
   - composer install
   - composer require codeclimate/php-test-reporter:dev-master
 

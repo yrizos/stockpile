@@ -55,7 +55,7 @@ class Filesystem extends Driver
         if (!is_dir($dirname)) @mkdir($dirname, 0777, true);
         if (!is_dir($dirname)) return false;
 
-        $value = serialize([$value, Driver::normalizeTtl($ttl)]);
+        $value = Driver::serialize($value, $ttl);
 
         return file_put_contents($path, $value, LOCK_EX) !== false;
     }
@@ -78,16 +78,11 @@ class Filesystem extends Driver
             throw new CacheException('Unserialization failed.');
         });
 
-        $cache = unserialize($cache);
-
-        restore_error_handler();
+        list($value, $expiration) = Driver::unserialize($cache);
 
         return
-            is_array($cache)
-            && isset($cache[0])
-            && isset($cache[1])
-            && Driver::isCurrent($cache[1])
-                ? $cache[0]
+            Driver::isCurrent($expiration)
+                ? $value
                 : false;
     }
 

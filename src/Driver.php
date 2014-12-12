@@ -59,7 +59,10 @@ abstract class Driver implements DriverInterface
 
     }
 
-    abstract protected function connect();
+    protected function connect()
+    {
+
+    }
 
     abstract public function exists($key);
 
@@ -81,6 +84,35 @@ abstract class Driver implements DriverInterface
                 : false;
     }
 
+    public static function serialize($value, $ttl = null)
+    {
+        if (is_resource($value)) throw new \CacheException('Serialization failed.');
+
+        $value = [$value, self::normalizeTtl($ttl)];
+
+        return serialize($value);
+    }
+
+    public static function unserialize($value)
+    {
+        set_error_handler(function () {
+            throw new CacheException('Unserialization failed.');
+        });
+
+        $value = unserialize($value);
+
+        restore_error_handler();
+
+        if (
+            !is_array($value)
+            || !isset($value[0])
+            || !isset($value[1])
+            || !($value[1] instanceof \DateTime)
+        ) throw new CacheException('Unserialization failed.');
+
+        return $value;
+    }
+
     /**
      * @param $key
      * @return mixed
@@ -95,7 +127,7 @@ abstract class Driver implements DriverInterface
 
         if (empty($key)) throw new InvalidArgumentException('Cache key can\'t be empty.');
 
-        return str_replace(' ', '_', $key);
+        return str_replace(' ', '-', $key);
     }
 
     public static function normalizeTtl($ttl = null)
