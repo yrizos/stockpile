@@ -64,7 +64,7 @@ class Filesystem extends Driver
      * @param $key
      * @return bool
      *
-     * @throws Exception\CacheException
+     * @throws CacheException
      */
     public function get($key)
     {
@@ -118,7 +118,7 @@ class Filesystem extends Driver
         return $this->getOption('directory') . DIRECTORY_SEPARATOR . $key . $this->getOption('extension');
     }
 
-    public static function normalizeKey($key)
+    public static function normalizeKey($key, $prefix = null)
     {
         $key = Driver::normalizeKey($key);
         $key = str_replace(['\\', '/'], DIRECTORY_SEPARATOR, $key);

@@ -21,4 +21,4 @@ class MemoryTest extends DriverCommon
     {
         $this->assertEquals([], $this->driver->getOptions());
     }
-} 
+}

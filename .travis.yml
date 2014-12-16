@@ -3,6 +3,11 @@ language: php
 php:
   - 5.4
 
+services:
+  - memcached
+
+before_install: phpenv config-add ./tests/.travis.php.ini
+
 install:
   - composer install
   - composer require codeclimate/php-test-reporter:dev-master

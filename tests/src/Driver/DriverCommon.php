@@ -39,7 +39,7 @@ abstract class DriverCommon extends \PHPUnit_Framework_TestCase
 
             $this->assertTrue($this->driver->exists($key));
 
-            $this->driver->delete($key);
+            $d = $this->driver->delete($key);
 
             $this->assertFalse($this->driver->exists($key));
         }
@@ -60,16 +60,8 @@ abstract class DriverCommon extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testExpire()
+    public function tearDown()
     {
-        $this->driver->set('expired', '', -1);
-
-        $this->assertTrue($this->driver->exists('expired'));
-        $this->assertFalse($this->driver->get('expired'));
+        $this->driver->clear();
     }
-
-//    public function tearDown()
-//    {
-//        $this->driver->clear();
-//    }
 } 

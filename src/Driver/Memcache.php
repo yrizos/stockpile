@@ -3,8 +3,6 @@
 namespace Stockpile\Driver;
 
 use Stockpile\Driver;
-use Stockpile\Exception\CacheException;
-use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Memcache extends Driver
@@ -19,35 +17,14 @@ class Memcache extends Driver
         $resolver->setDefaults([
             'host'    => '127.0.0.1',
             'port'    => (int) ini_get('memcache.default_port'),
-            'timeout' => 1,
-            'prefix'  => 'stockpile'
-        ]);
-
-
-        $resolver->setAllowedTypes('host', 'string');
-        $resolver->setAllowedTypes('port', 'int');
-        $resolver->setAllowedTypes('timeout', 'int');
-        $resolver->setAllowedTypes('prefix', 'string');
-
-        $resolver->setNormalizers([
-            'prefix' => function (Options $options, $prefix) {
-                    $prefix = Driver::normalizeKey($prefix);
-                    $prefix = trim($prefix, '-') . '-';
-
-                    return $prefix;
-                },
+            'timeout' => 1
         ]);
     }
 
     protected function connect()
     {
-        set_error_handler(function ($errno, $errstr) {
-            throw new CacheException('Connection failed: ' . $errstr);
-        });
-
-        $this->memcache = new \Memcache($this->getOption('host'), $this->getOption('port'), $this->getOption('timeout'));
-
-        restore_error_handler();
+        $this->memcache = new \Memcache();
+        $this->memcache->connect($this->getOption('host'), $this->getOption('port'), $this->getOption('timeout'));
     }
 
     public function exists($key)
@@ -57,28 +34,31 @@ class Memcache extends Driver
 
     public function set($key, $value, $ttl = null)
     {
-        $key = $this->getOption('prefix') . Driver::normalizeKey($key);
-        $ttl = Driver::normalizeTtl($ttl)->getTimestamp();
+        if (is_resource($value)) return false;
 
-        return true === $this->memcache->set($key, $value, 0, $ttl);
+        return true === $this->memcache->set(self::normalizeKey($key), $value, 0, self::normalizeTtl($ttl));
+
     }
 
     public function get($key)
     {
-        $key = $this->getOption('prefix') . Driver::normalizeKey($key);
-
-        return $this->memcache->get($key);
+        return $this->memcache->get(self::normalizeKey($key));
     }
 
     public function delete($key)
     {
-        $key = $this->getOption('prefix') . Driver::normalizeKey($key);
-
-        return true === $this->memcache->delete($key);
+        return true === $this->memcache->delete(self::normalizeKey($key));
     }
 
     public function clear()
     {
         return true === $this->memcache->flush();
     }
-} 
+
+    public static function normalizeTtl($ttl = null)
+    {
+        if (!is_int($ttl)) return 0;
+
+        return (int) $ttl;
+    }
+}

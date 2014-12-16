@@ -116,7 +116,7 @@ abstract class Driver implements DriverInterface
     /**
      * @param $key
      * @return mixed
-     * @throws Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public static function normalizeKey($key)
     {
