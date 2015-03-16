@@ -122,21 +122,14 @@ class Filesystem extends Driver
     {
         $key = Driver::normalizeKey($key);
         $key = str_replace(['\\', '/'], DIRECTORY_SEPARATOR, $key);
-        $key = trim($key, DIRECTORY_SEPARATOR);
+        $key = rtrim($key, DIRECTORY_SEPARATOR);
         $key = explode(DIRECTORY_SEPARATOR, $key);
-
-        $key = array_filter($key, function ($value) {
-            return !empty($value);
-        });
-
         $key = array_map(function ($value) {
-            if (filter_var($value, FILTER_SANITIZE_STRING) === $value) {
-                return $value;
-            }
-
-            return md5($value);
+            return (filter_var($value, FILTER_SANITIZE_STRING) === $value) ? $value : md5($value);
         }, $key);
 
-        return implode($key, DIRECTORY_SEPARATOR);
+        $key = implode($key, DIRECTORY_SEPARATOR);
+
+        return $key;
     }
 } 
